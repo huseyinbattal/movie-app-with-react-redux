@@ -3,10 +3,28 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import rootReducer from "./reducers/rootReducer"
+import { createStore,applyMiddleware,compose} from "redux"
+import thunk from "redux-thunk"
+import { composeWithDevTools } from 'redux-devtools-extension'; 
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import logger from 'redux-logger';
+import promise from 'redux-promise-middleware';
 
+
+// const allExtensions=compose(applyMiddleware(thunk),window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+
+const allExtensions=composeWithDevTools(applyMiddleware(thunk,promise,logger))
+
+const myStore=createStore(rootReducer,allExtensions)
 ReactDOM.render(
   <React.StrictMode>
+    <BrowserRouter>
+    <Provider store={myStore}>
     <App />
+    </Provider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
